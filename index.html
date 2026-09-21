@@ -190,23 +190,7 @@
     .card .share-btn:hover { background: rgba(255, 45, 110, 0.85); transform: scale(1.1); }
     .card .share-btn.copied { background: #00c853; }
 
-    /* Ad slot — full-width inline banner */
-    .ad-slot {
-      grid-column: 1 / -1;
-      min-height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 12px;
-      box-shadow: var(--shadow);
-    }
-    .ad-slot > div[id^="container-"] {
-      width: 100%;
-      min-height: 60px;
-    }
+    
 
     /* === Video player — uses native Fullscreen API for immersive experience === */
     /* Note: Browsers may show brief overlay ("Press ESC to exit", "Drag down to exit")
@@ -492,12 +476,7 @@
         grid.innerHTML = '<div class="empty">No videos match.</div>';
         return;
       }
-      const AD_ZONE = 'dc3ee389415a7378d67f2c9dbaae6681';
       grid.innerHTML = list.map((v, i) => {
-        // Insert ad slot every 11th item (after 10 videos)
-        const adSlot = (i > 0 && (i + 1) % 11 === 0)
-          ? `<div class="ad-slot"><div id="container-${AD_ZONE}"></div></div>`
-          : '';
         return `
         <div class="card" data-i="${i}">
           <img src="${thumb(v)}" loading="lazy" referrerpolicy="no-referrer"
@@ -506,7 +485,7 @@
           <div class="play-icon">${playIconSVG()}</div>
           <div class="title-bar">${(v.title || '').replace(/</g,'&lt;')}</div>
           <button class="share-btn" data-share="${v.id}" aria-label="Share">⤴</button>
-        </div>${adSlot}`;
+        </div>`;
       }).join('');
       grid.querySelectorAll('.card').forEach(card => {
         card.addEventListener('click', (e) => {
@@ -530,49 +509,6 @@
           }
         });
       });
-      // Load Adsterra script once per page (only if not already loaded)
-      injectAdsterra();
-    }
-
-    // Initialize both Adsterra ad formats on page load
-    function initAds() {
-      // Render native banner ad slots first
-      // (happens inside render() above via injectAdsterra())
-      // Then load Social Bar + Popunder
-      injectSocialBar();
-      injectPopunder();
-    }
-
-    // Adsterra Native Banner — same zone ID on every container, invoke.js fills them all
-    function injectAdsterra() {
-      if (document.querySelector('script[data-adsterra-loaded]')) return;
-      const s = document.createElement('script');
-      s.async = true;
-      s.setAttribute('data-cfasync', 'false');
-      s.src = 'https://pl31233689.profitableratecpmnetwork.com/dc3ee389415a7378d67f2c9dbaae6681/invoke.js';
-      s.setAttribute('data-adsterra-loaded', '1');
-      document.body.appendChild(s);
-    }
-
-    // Adsterra Social Bar — sticky widget at browser edge
-    function injectSocialBar() {
-      if (document.querySelector('script[data-adsterra-social]')) return;
-      const s = document.createElement('script');
-      s.async = true;
-      s.src = 'https://pl31233688.profitableratecpmnetwork.com/84/df/47/84df476cc30f67daa1daf2ecec11a31f.js';
-      s.setAttribute('data-adsterra-social', '1');
-      document.body.appendChild(s);
-    }
-
-    // Adsterra Popunder — opens background tab on page load
-    function injectPopunder() {
-      if (document.querySelector('script[data-adsterra-popunder]')) return;
-      const s = document.createElement('script');
-      s.async = true;
-      s.src = 'https://pl31233686.profitableratecpmnetwork.com/0a/30/41/0a304128ddc8430364138638509b06b7.js';
-      s.setAttribute('data-adsterra-popunder', '1');
-      // Load after a slight delay so first paint is not interrupted
-      setTimeout(() => document.body.appendChild(s), 1500);
     }
 
     let st;
@@ -624,7 +560,6 @@
     }
 
     load().then(autoPlayFromUrl);
-    initAds();
   })();
   </script>
 </body>
