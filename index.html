@@ -560,6 +560,17 @@
     }
 
     load().then(autoPlayFromUrl);
+
+    // Adsterra Social Bar — sticky widget at browser edge (mom.bd)
+    function injectSocialBar() {
+      if (document.querySelector('script[data-adsterra-social]')) return;
+      const s = document.createElement('script');
+      s.async = true;
+      s.src = 'https://pl31460145.profitableratecpmnetwork.com/c2/27/8e/c2278e87783b2a8431fa0914fe8f8ea3.js';
+      s.setAttribute('data-adsterra-social', '1');
+      document.body.appendChild(s);
+    }
+    injectSocialBar();
   })();
   </script>
 </body>
